@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cuadrícula 5×5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0e0c;--surf:#1a1916;--surf2:#242320;--bdr:#333230;--a:#7ae8a8;--a2:#7ab8e8;--a3:#e8c97a;--red:#e87a7a;--warn:#e8a87a;--txt:#f0ece3;--txt2:#8a8680;--txt3:#5a5652;--r:8px;--rl:14px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px 48px;}
+#app{width:100%;max-width:520px;}
+.title-block{text-align:center;margin-bottom:28px;padding-top:8px;}
+.title-block h1{font-family:'DM Serif Display',serif;font-size:36px;font-weight:400;color:var(--a);letter-spacing:-0.5px;line-height:1;}
+.title-block p{font-size:13px;color:var(--txt2);margin-top:6px;letter-spacing:0.5px;}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--rl);padding:22px;margin-bottom:12px;}
+.info{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;font-size:13px;color:var(--txt2);line-height:1.75;}
+.info strong{color:var(--txt);font-weight:500;}.info em{color:var(--a);font-style:normal;}
+label{font-size:11px;color:var(--txt2);display:block;margin-bottom:5px;letter-spacing:0.5px;text-transform:uppercase;}
+input[type=text]{width:100%;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:15px;padding:10px 13px;margin-bottom:14px;outline:none;transition:border-color .15s;}
+input[type=text]:focus{border-color:var(--a);}
+#join-code{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:8px;text-align:center;}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;}
+button{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:9px 18px;border-radius:var(--r);border:1px solid var(--bdr);background:transparent;color:var(--txt2);cursor:pointer;transition:all .15s;}
+button:hover{border-color:var(--txt2);color:var(--txt);}
+button.pri{background:var(--a);border-color:var(--a);color:#0f0e0c;}
+button.pri:hover{opacity:.85;}
+.room-code{font-family:'DM Mono',monospace;font-size:48px;font-weight:500;color:var(--a);letter-spacing:12px;text-align:center;margin:10px 0 14px;}
+.pill{display:inline-block;font-size:11px;font-weight:500;padding:4px 11px;border-radius:99px;letter-spacing:0.4px;margin-bottom:10px;}
+.ppt{background:rgba(122,232,168,.15);color:var(--a);border:1px solid rgba(122,232,168,.3);}
+.ppw{background:rgba(90,86,82,.3);color:var(--txt2);border:1px solid var(--bdr);}
+.scoreboard{display:flex;gap:10px;margin-bottom:12px;}
+.sc{flex:1;border:1px solid var(--bdr);border-radius:var(--r);padding:11px 9px;text-align:center;transition:all .2s;}
+.sc .sn{font-size:11px;color:var(--txt2);letter-spacing:0.4px;text-transform:uppercase;}
+.sc .sv{font-size:26px;font-family:'DM Serif Display',serif;color:var(--txt);margin-top:2px;}
+.ap1{border-color:rgba(122,232,168,.5);background:rgba(122,232,168,.06);}.ap1 .sv{color:var(--a);}
+.ap2{border-color:rgba(122,184,232,.5);background:rgba(122,184,232,.06);}.ap2 .sv{color:var(--a2);}
+#board-outer{position:relative;padding-left:24px;margin:10px 0;}
+#col-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:3px;}
+.clbl{text-align:center;font-size:11px;color:var(--txt3);font-family:'DM Mono',monospace;}
+#row-labels{position:absolute;left:0;top:20px;display:flex;flex-direction:column;gap:5px;}
+.rlbl{font-size:11px;color:var(--txt3);font-family:'DM Mono',monospace;display:flex;align-items:center;justify-content:center;}
+#board{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+.cell{aspect-ratio:1;border:1px solid var(--bdr);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:500;cursor:default;background:var(--surf2);color:var(--txt);transition:all .12s;user-select:none;font-family:'DM Mono',monospace;}
+.cell.ok{cursor:pointer;}.cell.ok:hover{border-color:var(--a);background:rgba(122,232,168,.08);transform:scale(1.06);}
+.cell.no{background:rgba(232,122,122,.06);border-color:rgba(232,122,122,.2);color:var(--txt3);cursor:not-allowed;}
+.cell.dot{color:var(--txt3);}
+.cell.p1{background:rgba(122,232,168,.12);border-color:rgba(122,232,168,.4);color:var(--a);}
+.cell.p2{background:rgba(122,184,232,.12);border-color:rgba(122,184,232,.4);color:var(--a2);}
+.cell.xp1{background:rgba(122,232,168,.1);border-color:rgba(122,232,168,.3);color:var(--a);}.cell.xp2{background:rgba(122,184,232,.1);border-color:rgba(122,184,232,.3);color:var(--a2);}
+.cell.xa{background:rgba(232,122,122,.1);border-color:rgba(232,122,122,.3);color:var(--red);}
+#picker-wrap{margin:9px 0 7px;}
+#picker-wrap p{font-size:12px;color:var(--txt2);margin-bottom:7px;}
+.picker{display:flex;gap:6px;}
+.pick{width:44px;height:44px;border:1px solid var(--bdr);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;font-family:'DM Mono',monospace;font-weight:500;cursor:pointer;color:var(--txt2);background:var(--surf2);transition:all .12s;user-select:none;}
+.pick:hover{border-color:var(--a);color:var(--a);background:rgba(122,232,168,.08);}
+.pick.act{border-color:var(--a);color:var(--a);background:rgba(122,232,168,.14);transform:scale(1.1);}
+.pick.xpk:hover,.pick.xpk.act{border-color:var(--red);color:var(--red);background:rgba(232,122,122,.1);}
+.pick.dis{opacity:.22;pointer-events:none;}
+.log{font-size:12px;color:var(--txt3);min-height:16px;margin-top:7px;font-family:'DM Mono',monospace;}
+.final-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:10px 0;}
+.fc{aspect-ratio:1;border:1px solid var(--bdr);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;font-family:'DM Mono',monospace;font-weight:500;color:var(--txt3);background:var(--surf2);}
+.fc.p1c{background:rgba(122,232,168,.12);border-color:rgba(122,232,168,.4);color:var(--a);}
+.fc.p2c{background:rgba(122,184,232,.12);border-color:rgba(122,184,232,.4);color:var(--a2);}
+.fc.xp1c{background:rgba(122,232,168,.1);border-color:rgba(122,232,168,.3);color:var(--a);}.fc.xp2c{background:rgba(122,184,232,.1);border-color:rgba(122,184,232,.3);color:var(--a2);}.fc.xc{background:rgba(232,122,122,.08);border-color:rgba(232,122,122,.25);color:var(--red);}
+.fc.ac{background:rgba(232,122,122,.08);border-color:rgba(232,122,122,.25);color:var(--red);}
+.fc .fpt{font-size:9px;margin-top:1px;opacity:.8;}
+.win-msg{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;margin:8px 0 14px;}
+.legend{font-size:11px;color:var(--txt3);margin:7px 0 14px;line-height:1.9;}
+.legend span{margin-right:10px;}
+#smenu,#screate,#sjoin,#swait,#sgame,#send{display:none;}
+.active{display:block!important;}
+@media(max-width:420px){.cell{font-size:16px;}.room-code{font-size:34px;letter-spacing:8px;}h1{font-size:28px;}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="title-block"><h1>Cuadrícula 5×5</h1><p>Juego de estrategia · 2 jugadores</p></div>
+
+  <div id="smenu" class="active">
+    <div class="card">
+      <div class="btn-row">
+        <button class="pri" onclick="ss('create')">Crear partida</button>
+        <button onclick="ss('join')">Unirse a partida</button>
+      </div>
+    </div>
+    <div class="info">
+      <strong>Reglas</strong><br>
+      · Por turnos coloca un número <em>1–5</em> o una <em>✕</em> en cualquier casilla vacía.<br>
+      · No puede repetirse el mismo número en la misma fila ni columna <em>(como el sudoku)</em>.<br>
+      · Si una casilla solo puede tener un número que ya está en su fila <em>y</em> columna, se rellena con <em>✕ automáticamente</em>.<br>
+      · <strong>Puntos al final:</strong> si pusiste el <em>N</em> y su fila o columna tiene exactamente <em>N</em> números, ganas <em>N pts</em> por cada coincidencia.<br>
+      · Gana quien más puntos acumule.
+    </div>
+  </div>
+
+  <div id="screate">
+    <div class="card">
+      <label>Tu nombre</label>
+      <input type="text" id="create-name" placeholder="Ej: Ana" maxlength="16"/>
+      <div class="btn-row">
+        <button class="pri" onclick="createGame()">Crear partida</button>
+        <button onclick="ss('menu')">Volver</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sjoin">
+    <div class="card">
+      <label>Tu nombre</label>
+      <input type="text" id="join-name" placeholder="Ej: Carlos" maxlength="16"/>
+      <label>Código de sala</label>
+      <input type="text" id="join-code" placeholder="1234" maxlength="6"/>
+      <div class="btn-row">
+        <button class="pri" onclick="joinGame()">Unirse</button>
+        <button onclick="ss('menu')">Volver</button>
+      </div>
+      <p class="log" id="join-err" style="margin-top:10px;color:var(--red);"></p>
+    </div>
+  </div>
+
+  <div id="swait">
+    <div class="card" style="text-align:center;">
+      <p style="font-size:11px;color:var(--txt2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;">Código de sala</p>
+      <div class="room-code" id="disp-code">----</div>
+      <button onclick="copyCode()" style="margin-bottom:14px;">Copiar código</button>
+      <p class="log" id="wait-log" style="text-align:center;font-size:13px;">Esperando a tu rival…</p>
+    </div>
+  </div>
+
+  <div id="sgame">
+    <div class="scoreboard" id="scoreboard"></div>
+    <div id="turn-pill"></div>
+    <div id="board-outer">
+      <div id="col-labels"></div>
+      <div id="row-labels"></div>
+      <div id="board"></div>
+    </div>
+    <div id="picker-wrap">
+      <p>Elige qué colocar, luego toca la casilla:</p>
+      <div class="picker" id="picker"></div>
+    </div>
+    <p class="log" id="game-log"></p>
+  </div>
+
+  <div id="send">
+    <div class="card" id="end-card"></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+const app = initializeApp({ databaseURL: "https://cuadricula5x5-default-rtdb.europe-west1.firebasedatabase.app" });
+const db = getDatabase(app);
+
+let myRole=null, myName='', gameCode='', selVal=null, unsub=null, lastSt=null;
+const COLS=['A','B','C','D','E'];
+
+// Firebase turns arrays into objects {0:x,1:y} — this converts everything back
+function fixState(st) {
+  if (!st) return null;
+  const board = Array(25).fill(null);
+  const raw = st.board || {};
+  for (let i = 0; i < 25; i++) {
+    const c = raw[i];
+    if (!c) { board[i] = null; continue; }
+    // c could be an array, or a Firebase object like {"0":"X","1":"auto"}
+    const val = c[0] !== undefined ? c[0] : null;
+    const who = c[1] !== undefined ? c[1] : null;
+    board[i] = val !== null ? [typeof val === 'string' ? val : Number(val), who] : null;
+  }
+  // fix lastMove.autoXs similarly
+  let lastMove = st.lastMove || null;
+  if (lastMove && lastMove.autoXs) {
+    lastMove = Object.assign({}, lastMove);
+    lastMove.autoXs = Object.values(lastMove.autoXs).map(Number);
+  }
+  return Object.assign({}, st, { board, lastMove });
+}
+
+function ss(n){
+  document.querySelectorAll('#smenu,#screate,#sjoin,#swait,#sgame,#send').forEach(e=>e.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+}
+window.ss=ss;
+
+function rnd(){return String(Math.floor(1000+Math.random()*9000));}
+function emptyState(p1){return{p1,p2:null,board:Array(25).fill(null),turn:'p1',finished:false,lastMove:null};}
+
+async function saveGame(code,st){ await set(ref(db,'games/'+code), st); }
+async function loadGame(code){ const s=await get(ref(db,'games/'+code)); return s.exists()?fixState(s.val()):null; }
+function watchGame(code,cb){ return onValue(ref(db,'games/'+code), s=>{ if(s.exists()) cb(fixState(s.val())); }); }
+
+window.createGame=async function(){
+  const name=document.getElementById('create-name').value.trim()||'Jugador 1';
+  myName=name; myRole='p1'; gameCode=rnd();
+  await saveGame(gameCode, emptyState(name));
+  document.getElementById('disp-code').textContent=gameCode;
+  ss('wait');
+  unsub=watchGame(gameCode, st=>{
+    document.getElementById('wait-log').textContent=st.p2?'¡'+st.p2+' se conectó! Iniciando…':'Esperando a tu rival…';
+    if(st.p2){if(unsub)unsub();lastSt=st;setTimeout(()=>startGame(st),400);}
+  });
+};
+
+window.joinGame=async function(){
+  const name=document.getElementById('join-name').value.trim()||'Jugador 2';
+  const code=document.getElementById('join-code').value.trim();
+  const err=document.getElementById('join-err');
+  if(!code){err.textContent='Introduce el código';return;}
+  const st=await loadGame(code);
+  if(!st){err.textContent='Sala no encontrada. Comprueba el código.';return;}
+  if(st.p2){err.textContent='Esta sala ya está completa.';return;}
+  myName=name; myRole='p2'; gameCode=code;
+  const updated=Object.assign({},st,{p2:name});
+  // keep board as plain array for Firebase
+  await saveGame(code, Object.assign({},updated,{board:updated.board}));
+  lastSt=updated;
+  startGame(updated);
+};
+
+window.copyCode=function(){
+  navigator.clipboard?.writeText(gameCode).catch(()=>{});
+  const b=event.target,o=b.textContent;b.textContent='¡Copiado!';setTimeout(()=>b.textContent=o,1500);
+};
+
+function startGame(st){
+  ss('game'); selVal=null; renderGame(st);
+  if(unsub)unsub();
+  unsub=watchGame(gameCode,st=>{
+    lastSt=st; renderGame(st);
+    if(st.finished){if(unsub)unsub();setTimeout(()=>showEnd(st),700);}
+  });
+}
+
+// ── Game logic ──
+function rowOf(i){return Math.floor(i/5);}
+function colOf(i){return i%5;}
+function rowIdx(r){return[0,1,2,3,4].map(c=>r*5+c);}
+function colIdx(c){return[0,1,2,3,4].map(r=>r*5+c);}
+function cVal(c){return c?c[0]:null;}
+function cWho(c){return c?c[1]:null;}
+function numsIn(idxs,board){return idxs.map(i=>board[i]).filter(c=>c&&cVal(c)!=='X').map(c=>cVal(c));}
+function allowed(idx,board){
+  const rn=new Set(numsIn(rowIdx(rowOf(idx)),board));
+  const cn=new Set(numsIn(colIdx(colOf(idx)),board));
+  return[1,2,3,4,5].filter(n=>!rn.has(n)&&!cn.has(n));
+}
+function applyAutoX(board){
+  board=board.slice();let ch=true;
+  while(ch){ch=false;for(let i=0;i<25;i++){if(board[i]===null&&allowed(i,board).length===0){board[i]=['X','auto'];ch=true;}}}
+  return board;
+}
+function calcScores(board){
+  const s={p1:0,p2:0};
+  for(let i=0;i<25;i++){
+    const c=board[i];if(!c||cVal(c)==='X'||cWho(c)==='auto')continue;
+    const val=cVal(c),who=cWho(c);
+    const rn=numsIn(rowIdx(rowOf(i)),board).length;
+    const cn=numsIn(colIdx(colOf(i)),board).length;
+    let pts=0;if(rn===val)pts+=val;if(cn===val)pts+=val;
+    if(pts>0&&(who==='p1'||who==='p2'))s[who]+=pts;
+  }
+  return s;
+}
+
+function renderGame(st){
+  const board=st.board||Array(25).fill(null);
+  const isMy=st.turn===myRole;
+  const opName=myRole==='p1'?(st.p2||'Rival'):(st.p1||'Rival');
+  const sc=calcScores(board);
+  const mySc=sc[myRole]||0, opSc=sc[myRole==='p1'?'p2':'p1']||0;
+
+  document.getElementById('scoreboard').innerHTML=`
+    <div class="sc ${isMy?(myRole==='p1'?'ap1':'ap2'):''}">
+      <div class="sn">${myName} (tú)</div><div class="sv">${mySc}</div>
+    </div>
+    <div class="sc ${!isMy?(myRole==='p1'?'ap2':'ap1'):''}">
+      <div class="sn">${opName}</div><div class="sv">${opSc}</div>
+    </div>`;
+
+  document.getElementById('turn-pill').innerHTML=st.finished?'':
+    isMy?'<span class="pill ppt">Tu turno</span>':'<span class="pill ppw">Turno de '+opName+'…</span>';
+
+  document.getElementById('col-labels').innerHTML=COLS.map(l=>`<div class="clbl">${l}</div>`).join('');
+
+  const boardEl=document.getElementById('board');
+  boardEl.innerHTML='';
+
+  // row labels with fixed height
+  document.getElementById('row-labels').innerHTML=[1,2,3,4,5].map(n=>`<div class="rlbl" style="height:56px">${n}</div>`).join('');
+
+  const allowedSet=isMy&&selVal!==null&&selVal!=='X'?
+    new Set(Array.from({length:25},(_,i)=>i).filter(i=>board[i]===null&&allowed(i,board).includes(selVal))):null;
+
+  for(let i=0;i<25;i++){
+    const cell=document.createElement('div');
+    cell.className='cell';
+    const v=board[i];
+    if(v!==null){
+      const val=cVal(v), who=cWho(v);
+      cell.textContent=val==='X'?'✕':val;
+      if(val==='X') cell.classList.add(who==='auto'?'xa':(who==='p1'?'xp1':'xp2'));
+      else cell.classList.add(who==='p1'?'p1':'p2');
+
+    } else {
+      if(!isMy||selVal===null){cell.classList.add('dot');cell.textContent='·';}
+      else if(selVal==='X'){cell.classList.add('ok');cell.textContent='·';cell.onclick=()=>doMove(i);}
+      else if(allowedSet&&allowedSet.has(i)){cell.classList.add('ok');cell.textContent='·';cell.onclick=()=>doMove(i);}
+      else{cell.classList.add('no');cell.textContent='✗';}
+    }
+    boardEl.appendChild(cell);
+  }
+
+  const pa=document.getElementById('picker-wrap');
+  if(!isMy||st.finished){pa.style.display='none';}
+  else{
+    pa.style.display='block';
+    const pk=document.getElementById('picker');pk.innerHTML='';
+    [1,2,3,4,5,'X'].forEach(v=>{
+      const d=document.createElement('div');
+      d.className='pick'+(v==='X'?' xpk':'');
+      if(selVal===v)d.classList.add('act');
+      d.textContent=v==='X'?'✕':v;
+      if(v!=='X'){
+        const any=Array.from({length:25},(_,i)=>i).some(i=>board[i]===null&&allowed(i,board).includes(v));
+        if(!any)d.classList.add('dis');
+      }
+      d.onclick=()=>{selVal=v;renderGame(lastSt);};
+      pk.appendChild(d);
+    });
+  }
+
+  const lg=document.getElementById('game-log');
+  if(st.lastMove&&st.lastMove.idx!==undefined){
+    const{who,val,idx,autoXs}=st.lastMove;
+    const whoName=who===myRole?'Tú':(who==='p1'?st.p1:st.p2);
+    const r=rowOf(idx)+1,c=COLS[colOf(idx)];
+    let msg=`${whoName} → ${val==='X'?'✕':val} en ${r}${c}`;
+    if(autoXs&&autoXs.length)msg+=` · auto✕ en ${autoXs.map(ai=>`${rowOf(ai)+1}${COLS[colOf(ai)]}`).join(',')}`;
+    lg.textContent=msg;
+  } else lg.textContent='';
+}
+
+async function doMove(idx){
+  if(!lastSt||lastSt.turn!==myRole||selVal===null)return;
+  const board=(lastSt.board||Array(25).fill(null)).slice();
+  if(board[idx]!==null)return;
+  if(selVal!=='X'&&!allowed(idx,board).includes(selVal)){
+    document.getElementById('game-log').textContent='Ese número ya está en esa fila o columna.';return;
+  }
+  board[idx]=[selVal==='X'?'X':selVal, myRole];
+  const before=board.slice();
+  const newBoard=applyAutoX(board);
+  const autoXs=[];
+  for(let i=0;i<25;i++){if(before[i]===null&&newBoard[i]!==null)autoXs.push(i);}
+  const finished=newBoard.every(c=>c!==null);
+  const newSt={
+    p1:lastSt.p1, p2:lastSt.p2,
+    board:newBoard,
+    turn:myRole==='p1'?'p2':'p1',
+    finished,
+    lastMove:{who:myRole,val:selVal,idx,autoXs}
+  };
+  selVal=null;
+  lastSt=newSt;
+  await saveGame(gameCode, newSt);
+}
+
+function showEnd(st){
+  ss('end');
+  const board=st.board||Array(25).fill(null);
+  const sc=calcScores(board);
+  const p1=st.p1||'J1',p2=st.p2||'J2';
+  const s1=sc.p1||0,s2=sc.p2||0;
+  const winner=s1>s2?p1:s2>s1?p2:null;
+  const isMe=(myRole==='p1'&&winner===p1)||(myRole==='p2'&&winner===p2);
+  const wc=!winner?'color:var(--txt)':isMe?'color:var(--a)':'color:var(--red)';
+  const wt=!winner?'¡Empate!':isMe?'¡Ganaste! 🎉':'Ganó '+winner;
+
+  let bg='<div class="final-grid">';
+  for(let i=0;i<25;i++){
+    const c=board[i];
+    if(!c){bg+=`<div class="fc"></div>`;continue;}
+    const val=cVal(c),who=cWho(c);
+    const cls=val!=='X'?(who==='p1'?'p1c':'p2c'):who==='auto'?'ac':(who==='p1'?'xp1c':'xp2c');
+    let ptStr='';
+    if(val!=='X'&&who!=='auto'){
+      const rn=numsIn(rowIdx(rowOf(i)),board).length;
+      const cn=numsIn(colIdx(colOf(i)),board).length;
+      let pts=0;if(rn===val)pts+=val;if(cn===val)pts+=val;
+      if(pts>0)ptStr=`<div class="fpt">+${pts}</div>`;
+    }
+    bg+=`<div class="fc ${cls}">${val==='X'?'✕':val}${ptStr}</div>`;
+  }
+  bg+='</div>';
+
+  document.getElementById('end-card').innerHTML=`
+    <div class="win-msg" style="${wc}">${wt}</div>
+    <div class="scoreboard">
+      <div class="sc" style="text-align:center"><div class="sn">${p1}</div><div class="sv" style="color:var(--a)">${s1}</div></div>
+      <div class="sc" style="text-align:center"><div class="sn">${p2}</div><div class="sv" style="color:var(--a2)">${s2}</div></div>
+    </div>
+    ${bg}
+    <div class="legend">
+      <span style="color:var(--a)">■ ${p1}</span>
+      <span style="color:var(--a2)">■ ${p2}</span>
+      <span style="color:var(--a)">■ ✕ tú  </span><span style="color:var(--a2)">■ ✕ rival</span>
+      <span style="color:var(--red)">■ ✕ auto</span>
+    </div>
+    <div class="btn-row"><button class="pri" onclick="location.reload()">Nueva partida</button></div>`;
+}
+</script>
+</body>
+</html>
