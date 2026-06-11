@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f0e0c;--surf:#1a1916;--surf2:#242320;--bdr:#333230;--a:#7ae8a8;--a2:#7ab8e8;--a3:#e8c97a;--red:#e87a7a;--warn:#e8a87a;--txt:#f0ece3;--txt2:#8a8680;--txt3:#5a5652;--r:8px;--rl:14px;}
+:root{--bg:#0f0e0c;--surf:#1a1916;--surf2:#242320;--bdr:#333230;--a:#b07ae8;--a2:#7ab8e8;--pur:#b07ae8;--red:#e87a7a;--warn:#e8a87a;--txt:#f0ece3;--txt2:#8a8680;--txt3:#5a5652;--r:8px;--rl:14px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px 48px;}
@@ -29,42 +29,48 @@ button.pri{background:var(--a);border-color:var(--a);color:#0f0e0c;}
 button.pri:hover{opacity:.85;}
 .room-code{font-family:'DM Mono',monospace;font-size:48px;font-weight:500;color:var(--a);letter-spacing:12px;text-align:center;margin:10px 0 14px;}
 .pill{display:inline-block;font-size:11px;font-weight:500;padding:4px 11px;border-radius:99px;letter-spacing:0.4px;margin-bottom:10px;}
-.ppt{background:rgba(122,232,168,.15);color:var(--a);border:1px solid rgba(122,232,168,.3);}
+.ppt{background:rgba(176,122,232,.15);color:var(--pur);border:1px solid rgba(176,122,232,.3);}
 .ppw{background:rgba(90,86,82,.3);color:var(--txt2);border:1px solid var(--bdr);}
+/* scoreboard — names only during game, no score */
 .scoreboard{display:flex;gap:10px;margin-bottom:12px;}
-.sc{flex:1;border:1px solid var(--bdr);border-radius:var(--r);padding:11px 9px;text-align:center;transition:all .2s;}
-.sc .sn{font-size:11px;color:var(--txt2);letter-spacing:0.4px;text-transform:uppercase;}
-.sc .sv{font-size:26px;font-family:'DM Serif Display',serif;color:var(--txt);margin-top:2px;}
-.ap1{border-color:rgba(122,232,168,.5);background:rgba(122,232,168,.06);}.ap1 .sv{color:var(--a);}
-.ap2{border-color:rgba(122,184,232,.5);background:rgba(122,184,232,.06);}.ap2 .sv{color:var(--a2);}
-#board-outer{position:relative;padding-left:24px;margin:10px 0;}
-#col-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:3px;}
+.sc{flex:1;border:1px solid var(--bdr);border-radius:var(--r);padding:9px;text-align:center;transition:all .2s;}
+.sc .sn{font-size:12px;color:var(--txt2);letter-spacing:0.4px;text-transform:uppercase;}
+.ap1{border-color:rgba(176,122,232,.5);background:rgba(176,122,232,.06);}.ap1 .sn{color:var(--a);}
+.ap2{border-color:rgba(122,184,232,.5);background:rgba(122,184,232,.06);}.ap2 .sn{color:var(--a2);}
+/* board */
+#board-outer{position:relative;padding-left:20px;margin:10px 0;}
+#col-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:4px;padding-left:0;}
 .clbl{text-align:center;font-size:11px;color:var(--txt3);font-family:'DM Mono',monospace;}
-#row-labels{position:absolute;left:0;top:20px;display:flex;flex-direction:column;gap:5px;}
-.rlbl{font-size:11px;color:var(--txt3);font-family:'DM Mono',monospace;display:flex;align-items:center;justify-content:center;}
+#row-labels{position:absolute;left:0;top:0;display:flex;flex-direction:column;gap:5px;}
+.rlbl{font-size:11px;color:var(--txt3);font-family:'DM Mono',monospace;display:flex;align-items:center;justify-content:center;width:16px;}
 #board{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
 .cell{aspect-ratio:1;border:1px solid var(--bdr);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:500;cursor:default;background:var(--surf2);color:var(--txt);transition:all .12s;user-select:none;font-family:'DM Mono',monospace;}
-.cell.ok{cursor:pointer;}.cell.ok:hover{border-color:var(--a);background:rgba(122,232,168,.08);transform:scale(1.06);}
+.cell.ok{cursor:pointer;}
+.cell.ok:hover{border-color:var(--pur);background:rgba(176,122,232,.1);transform:scale(1.06);}
 .cell.no{background:rgba(232,122,122,.06);border-color:rgba(232,122,122,.2);color:var(--txt3);cursor:not-allowed;}
 .cell.dot{color:var(--txt3);}
-.cell.p1{background:rgba(122,232,168,.12);border-color:rgba(122,232,168,.4);color:var(--a);}
+.cell.p1{background:rgba(176,122,232,.12);border-color:rgba(176,122,232,.4);color:var(--a);}
 .cell.p2{background:rgba(122,184,232,.12);border-color:rgba(122,184,232,.4);color:var(--a2);}
-.cell.xp1{background:rgba(122,232,168,.1);border-color:rgba(122,232,168,.3);color:var(--a);}.cell.xp2{background:rgba(122,184,232,.1);border-color:rgba(122,184,232,.3);color:var(--a2);}
+.cell.xp1{background:rgba(176,122,232,.1);border-color:rgba(176,122,232,.3);color:var(--a);}
+.cell.xp2{background:rgba(122,184,232,.1);border-color:rgba(122,184,232,.3);color:var(--a2);}
 .cell.xa{background:rgba(232,122,122,.1);border-color:rgba(232,122,122,.3);color:var(--red);}
+/* picker */
 #picker-wrap{margin:9px 0 7px;}
 #picker-wrap p{font-size:12px;color:var(--txt2);margin-bottom:7px;}
 .picker{display:flex;gap:6px;}
 .pick{width:44px;height:44px;border:1px solid var(--bdr);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;font-family:'DM Mono',monospace;font-weight:500;cursor:pointer;color:var(--txt2);background:var(--surf2);transition:all .12s;user-select:none;}
-.pick:hover{border-color:var(--a);color:var(--a);background:rgba(122,232,168,.08);}
-.pick.act{border-color:var(--a);color:var(--a);background:rgba(122,232,168,.14);transform:scale(1.1);}
+.pick:hover{border-color:var(--pur);color:var(--pur);background:rgba(176,122,232,.08);}
+.pick.act{border-color:var(--pur);color:var(--pur);background:rgba(176,122,232,.14);transform:scale(1.1);}
 .pick.xpk:hover,.pick.xpk.act{border-color:var(--red);color:var(--red);background:rgba(232,122,122,.1);}
 .pick.dis{opacity:.22;pointer-events:none;}
 .log{font-size:12px;color:var(--txt3);min-height:16px;margin-top:7px;font-family:'DM Mono',monospace;}
+/* final board */
 .final-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:10px 0;}
 .fc{aspect-ratio:1;border:1px solid var(--bdr);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;font-family:'DM Mono',monospace;font-weight:500;color:var(--txt3);background:var(--surf2);}
-.fc.p1c{background:rgba(122,232,168,.12);border-color:rgba(122,232,168,.4);color:var(--a);}
+.fc.p1c{background:rgba(176,122,232,.12);border-color:rgba(176,122,232,.4);color:var(--a);}
 .fc.p2c{background:rgba(122,184,232,.12);border-color:rgba(122,184,232,.4);color:var(--a2);}
-.fc.xp1c{background:rgba(122,232,168,.1);border-color:rgba(122,232,168,.3);color:var(--a);}.fc.xp2c{background:rgba(122,184,232,.1);border-color:rgba(122,184,232,.3);color:var(--a2);}.fc.xc{background:rgba(232,122,122,.08);border-color:rgba(232,122,122,.25);color:var(--red);}
+.fc.xp1c{background:rgba(176,122,232,.1);border-color:rgba(176,122,232,.3);color:var(--a);}
+.fc.xp2c{background:rgba(122,184,232,.1);border-color:rgba(122,184,232,.3);color:var(--a2);}
 .fc.ac{background:rgba(232,122,122,.08);border-color:rgba(232,122,122,.25);color:var(--red);}
 .fc .fpt{font-size:9px;margin-top:1px;opacity:.8;}
 .win-msg{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;margin:8px 0 14px;}
@@ -160,7 +166,6 @@ const db = getDatabase(app);
 let myRole=null, myName='', gameCode='', selVal=null, unsub=null, lastSt=null;
 const COLS=['A','B','C','D','E'];
 
-// Firebase turns arrays into objects {0:x,1:y} — this converts everything back
 function fixState(st) {
   if (!st) return null;
   const board = Array(25).fill(null);
@@ -168,12 +173,10 @@ function fixState(st) {
   for (let i = 0; i < 25; i++) {
     const c = raw[i];
     if (!c) { board[i] = null; continue; }
-    // c could be an array, or a Firebase object like {"0":"X","1":"auto"}
     const val = c[0] !== undefined ? c[0] : null;
     const who = c[1] !== undefined ? c[1] : null;
     board[i] = val !== null ? [typeof val === 'string' ? val : Number(val), who] : null;
   }
-  // fix lastMove.autoXs similarly
   let lastMove = st.lastMove || null;
   if (lastMove && lastMove.autoXs) {
     lastMove = Object.assign({}, lastMove);
@@ -217,8 +220,7 @@ window.joinGame=async function(){
   if(st.p2){err.textContent='Esta sala ya está completa.';return;}
   myName=name; myRole='p2'; gameCode=code;
   const updated=Object.assign({},st,{p2:name});
-  // keep board as plain array for Firebase
-  await saveGame(code, Object.assign({},updated,{board:updated.board}));
+  await saveGame(code, updated);
   lastSt=updated;
   startGame(updated);
 };
@@ -237,7 +239,6 @@ function startGame(st){
   });
 }
 
-// ── Game logic ──
 function rowOf(i){return Math.floor(i/5);}
 function colOf(i){return i%5;}
 function rowIdx(r){return[0,1,2,3,4].map(c=>r*5+c);}
@@ -272,15 +273,14 @@ function renderGame(st){
   const board=st.board||Array(25).fill(null);
   const isMy=st.turn===myRole;
   const opName=myRole==='p1'?(st.p2||'Rival'):(st.p1||'Rival');
-  const sc=calcScores(board);
-  const mySc=sc[myRole]||0, opSc=sc[myRole==='p1'?'p2':'p1']||0;
 
+  // Scoreboard — solo nombres, sin puntuación durante la partida
   document.getElementById('scoreboard').innerHTML=`
     <div class="sc ${isMy?(myRole==='p1'?'ap1':'ap2'):''}">
-      <div class="sn">${myName} (tú)</div><div class="sv">${mySc}</div>
+      <div class="sn">${myName} (tú)</div>
     </div>
     <div class="sc ${!isMy?(myRole==='p1'?'ap2':'ap1'):''}">
-      <div class="sn">${opName}</div><div class="sv">${opSc}</div>
+      <div class="sn">${opName}</div>
     </div>`;
 
   document.getElementById('turn-pill').innerHTML=st.finished?'':
@@ -291,8 +291,9 @@ function renderGame(st){
   const boardEl=document.getElementById('board');
   boardEl.innerHTML='';
 
-  // row labels with fixed height
-  document.getElementById('row-labels').innerHTML=[1,2,3,4,5].map(n=>`<div class="rlbl" style="height:56px">${n}</div>`).join('');
+  // Row labels: sincronizadas con el grid usando CSS grid en lugar de posición absoluta
+  const rl=document.getElementById('row-labels');
+  rl.style.cssText='';
 
   const allowedSet=isMy&&selVal!==null&&selVal!=='X'?
     new Set(Array.from({length:25},(_,i)=>i).filter(i=>board[i]===null&&allowed(i,board).includes(selVal))):null;
@@ -306,7 +307,6 @@ function renderGame(st){
       cell.textContent=val==='X'?'✕':val;
       if(val==='X') cell.classList.add(who==='auto'?'xa':(who==='p1'?'xp1':'xp2'));
       else cell.classList.add(who==='p1'?'p1':'p2');
-
     } else {
       if(!isMy||selVal===null){cell.classList.add('dot');cell.textContent='·';}
       else if(selVal==='X'){cell.classList.add('ok');cell.textContent='·';cell.onclick=()=>doMove(i);}
@@ -315,6 +315,23 @@ function renderGame(st){
     }
     boardEl.appendChild(cell);
   }
+
+  // Row labels alineados con el board mediante requestAnimationFrame
+  requestAnimationFrame(()=>{
+    const cells=boardEl.querySelectorAll('.cell');
+    if(cells.length<5)return;
+    const gap=5;
+    rl.innerHTML='';
+    for(let r=0;r<5;r++){
+      const cellEl=cells[r*5];
+      const h=cellEl.offsetHeight||50;
+      const d=document.createElement('div');
+      d.className='rlbl';
+      d.style.height=h+'px';
+      d.textContent=r+1;
+      rl.appendChild(d);
+    }
+  });
 
   const pa=document.getElementById('picker-wrap');
   if(!isMy||st.finished){pa.style.display='none';}
@@ -359,16 +376,10 @@ async function doMove(idx){
   const autoXs=[];
   for(let i=0;i<25;i++){if(before[i]===null&&newBoard[i]!==null)autoXs.push(i);}
   const finished=newBoard.every(c=>c!==null);
-  const newSt={
-    p1:lastSt.p1, p2:lastSt.p2,
-    board:newBoard,
-    turn:myRole==='p1'?'p2':'p1',
-    finished,
-    lastMove:{who:myRole,val:selVal,idx,autoXs}
-  };
+  const newSt={p1:lastSt.p1,p2:lastSt.p2,board:newBoard,turn:myRole==='p1'?'p2':'p1',finished,lastMove:{who:myRole,val:selVal,idx,autoXs}};
   selVal=null;
   lastSt=newSt;
-  await saveGame(gameCode, newSt);
+  await saveGame(gameCode,newSt);
 }
 
 function showEnd(st){
@@ -401,15 +412,14 @@ function showEnd(st){
 
   document.getElementById('end-card').innerHTML=`
     <div class="win-msg" style="${wc}">${wt}</div>
-    <div class="scoreboard">
-      <div class="sc" style="text-align:center"><div class="sn">${p1}</div><div class="sv" style="color:var(--a)">${s1}</div></div>
-      <div class="sc" style="text-align:center"><div class="sn">${p2}</div><div class="sv" style="color:var(--a2)">${s2}</div></div>
+    <div class="scoreboard" style="margin-bottom:12px;">
+      <div class="sc" style="text-align:center"><div class="sn" style="color:var(--a)">${p1}</div><div style="font-size:24px;font-family:'DM Serif Display',serif;color:var(--a)">${s1} pts</div></div>
+      <div class="sc" style="text-align:center"><div class="sn" style="color:var(--a2)">${p2}</div><div style="font-size:24px;font-family:'DM Serif Display',serif;color:var(--a2)">${s2} pts</div></div>
     </div>
     ${bg}
     <div class="legend">
       <span style="color:var(--a)">■ ${p1}</span>
       <span style="color:var(--a2)">■ ${p2}</span>
-      <span style="color:var(--a)">■ ✕ tú  </span><span style="color:var(--a2)">■ ✕ rival</span>
       <span style="color:var(--red)">■ ✕ auto</span>
     </div>
     <div class="btn-row"><button class="pri" onclick="location.reload()">Nueva partida</button></div>`;
